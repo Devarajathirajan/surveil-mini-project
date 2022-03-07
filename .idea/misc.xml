@@ -3,14 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/home_page_background.xml" value="0.37447916666666664" />
         <entry key="app/src/main/res/drawable/ic_astronaut_man.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.37447916666666664" />
+        <entry key="app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.37447916666666664" />
         <entry key="app/src/main/res/drawable/ic_google.xml" value="0.21614583333333334" />
         <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.37447916666666664" />
         <entry key="app/src/main/res/drawable/rounded_rect.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/rounded_rect_white.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.35833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.20010422094841063" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_class.xml" value="0.5652173913043478" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21614583333333334" />
       </map>
     </option>

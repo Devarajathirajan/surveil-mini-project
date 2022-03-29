@@ -7,6 +7,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foregroundTint="#5C29B8">
+
+
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -15,11 +18,37 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <androidx.recyclerview.widget.RecyclerView
+            <androidx.appcompat.widget.Toolbar
+                android:layout_marginTop="4dp"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/app_name"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="8dp"
+                    android:id="@+id/display_pic"
+                    android:layout_gravity="end"
+                    />
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/class_room_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:id="@+id/class_room_list"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
@@ -27,6 +56,7 @@
                 android:layout_margin="16dp"
                 android:backgroundTint="@color/white"
                 android:src="@drawable/ic_baseline_add_24"
+                android:id="@+id/create_room"
                 app:backgroundTint="#000000"
                 app:borderWidth="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"

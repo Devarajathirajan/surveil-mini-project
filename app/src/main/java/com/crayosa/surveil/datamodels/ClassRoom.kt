@@ -1,8 +1,12 @@
 package com.crayosa.surveil.datamodels
 
+import com.google.firebase.firestore.DocumentId
+
 data class ClassRoom(
-    val id : Int,
+    @DocumentId
+    val id : String?,
     val name : String,
-    val course_name :  String,
-    val teacher_name : String
+    val section_name :  String,
+    val teacher_name : String,
+    val members : List<Users> //user ids
 )

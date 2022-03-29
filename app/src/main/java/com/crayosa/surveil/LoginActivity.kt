@@ -15,7 +15,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import kotlinx.coroutines.CoroutineScope
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.coroutineContext
@@ -44,30 +45,16 @@ class LoginActivity : AppCompatActivity() {
             }
         }
         binding.imageView.setOnClickListener {
-            //TODO add google sign in using Firebase auth
                 googleSignIn()
         }
     }
-    override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if(currentUser !=  null) {
-            startActivity(
-                Intent(this, MainActivity::class.java)
-            )
-            Log.d(TAG,currentUser.photoUrl.toString())
-        }
-        else
-            Log.d(TAG,"Firebase authentication error")
-    }
+
+    //TODO proper launch mode
     private suspend fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         withContext(coroutineContext){
             auth.signInWithCredential(credential)
-            startActivity(
-                Intent(baseContext,MainActivity::class.java)
-            )
+            finish()
         }
 
 

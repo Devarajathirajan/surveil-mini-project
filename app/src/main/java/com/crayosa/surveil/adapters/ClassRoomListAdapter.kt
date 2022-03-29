@@ -37,7 +37,7 @@ private class RoomDiffUtil : DiffUtil.ItemCallback<ClassRoom>(){
 class ClassRoomViewHolder(private val binding : LayoutClassBinding) : RecyclerView.ViewHolder(binding.root){
     fun bind(classRoom : ClassRoom){
         binding.className.text = classRoom.name
-        binding.courseName.text = classRoom.course_name
+        binding.courseName.text = classRoom.section_name
         binding.courseStaffName.text = classRoom.teacher_name
     }
 }

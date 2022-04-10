@@ -27,8 +27,7 @@ class CreateClassRoom : Fragment() {
             FirebaseRepository(Firebase.firestore)
                 .addClassRoom(
                     ClassRoom(null, binding.roomName.text.toString(), binding.roomSectionName
-                        .text.toString(),binding.roomFacultyName.text.toString(),
-                        emptyList()),
+                        .text.toString(),binding.roomFacultyName.text.toString()),
                     FirebaseAuth.getInstance().currentUser!!.uid
                 )
             requireView().findNavController().navigateUp()

@@ -12,20 +12,31 @@ import kotlinx.coroutines.flow.callbackFlow
 
 class FirebaseRepository(private val firestore: FirebaseFirestore){
 
-    fun getEnrolledRooms(uID: String) : Flow<MutableList<String>>{
-        return callbackFlow<MutableList<String>>{
-            var result : MutableList<String>? = mutableListOf()
+    fun getEnrolledRooms(uID: String) : Flow<MutableList<ClassRoom?>>{
+        return callbackFlow {
+            val result : MutableList<ClassRoom?> = mutableListOf()
             firestore.collection(USERS_COLLECTION).document(uID).get()
-                .addOnSuccessListener {
+                .addOnSuccessListener { it ->
                     val data = it.data?.get(ENROLLED_CLASSROOMS)
                     if (data != null) {
-                        result = data as MutableList<String>
-                        Log.d(HomeFragment.TAG, result.toString())
+                        val list = data as MutableList<HashMap<String,String>>?
+                        if (list != null) {
+                            for(l in list){
+                                ClassRoom(
+                                    l["id"],
+                                    l["name"]!!,
+                                    l["section_name"]!!,
+                                    l["teacher_name"]!!
+                                ).let {
+                                    result.add(it)
+                                }
+                            }
+                        }
                     }
                     else{
                         return@addOnSuccessListener
                     }
-                    trySend(result!!).isSuccess
+                    trySend(result).isSuccess
                 }
 
             awaitClose {  }
@@ -37,7 +48,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
             classroom
         ).addOnSuccessListener {
             firestore.collection(USERS_COLLECTION).document(uID)
-                .update(ENROLLED_CLASSROOMS, FieldValue.arrayUnion(it.id))
+                .update(ENROLLED_CLASSROOMS, FieldValue.arrayUnion(ClassRoom(it.id, classroom.section_name, classroom.name, classroom.teacher_name)))
         }
 
     }

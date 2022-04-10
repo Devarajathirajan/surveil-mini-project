@@ -24,14 +24,6 @@
             android:inputType="textPersonName"
             android:hint="Section" />
 
-        <EditText
-            android:layout_margin="20dp"
-            android:id="@+id/room_subject_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:hint="Subject" />
 
         <EditText
             android:layout_margin="20dp"

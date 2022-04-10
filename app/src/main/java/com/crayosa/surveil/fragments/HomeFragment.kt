@@ -22,6 +22,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlin.math.log
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
@@ -45,25 +46,15 @@ class HomeFragment : Fragment() {
                 auth.signOut()
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
             }
+            val adapter = ClassRoomListAdapter()
             lifecycleScope.launch {
                 FirebaseRepository(Firebase.firestore)
                     .getEnrolledRooms(auth.currentUser!!.uid).collectLatest {
-                        Log.d(TAG,it.toString())
+                        adapter.submitList(it)
                     }
             }
 
-            val list = mutableListOf<ClassRoom>(
-                ClassRoom(
-                    "0",
-                    "CSE IIIrd year",
-                    "Professional English",
-                    "Mr. Vivekanand N",
-                    emptyList()
-                ),
-                ClassRoom("1", "CSE IIIrd year", "Cyber Security", "Mr. Ezhumalai P", emptyList())
-            )
-            val adapter = ClassRoomListAdapter()
-            adapter.submitList(list)
+
             binding.classRoomList.adapter = adapter
             binding.createRoom.setOnClickListener {
                 requireView().findNavController()

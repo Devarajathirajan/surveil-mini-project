@@ -15,7 +15,8 @@
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_create_class_room.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_join_class.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/layout/fragment_join_class_room.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_roommates.xml" value="0.35833333333333334" />

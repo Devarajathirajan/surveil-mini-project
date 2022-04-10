@@ -57,8 +57,16 @@ class HomeFragment : Fragment() {
 
             binding.classRoomList.adapter = adapter
             binding.createRoom.setOnClickListener {
+                binding.createFab.visibility = View.VISIBLE
+                binding.joinFab.visibility = View.VISIBLE
+            }
+            binding.createFab.setOnClickListener {
                 requireView().findNavController()
                     .navigate(R.id.action_homeFragment_to_createClassRoom)
+            }
+            binding.joinFab.setOnClickListener {
+                requireView().findNavController()
+                    .navigate(R.id.action_homeFragment_to_joinClassFragment)
             }
         }
         return binding.root

@@ -12,4 +12,7 @@
     <color name="light_blue_A200">#FF40C4FF</color>
     <color name="light_blue_A400">#FF00B0FF</color>
     <color name="black_overlay">#66000000</color>
+    <color name="classroom_card_1">#ffc700</color>
+    <color name="classroom_card_2">#a079f3</color>
+    <color name="classroom_card_3">#9f9ca4</color>
 </resources>

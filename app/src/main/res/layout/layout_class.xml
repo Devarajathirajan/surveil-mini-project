@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/hero_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleX="1.1"
@@ -28,25 +29,37 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TextView
+                    android:maxWidth="200dp"
                     android:id="@+id/class_name"
+                    android:textScaleX="0.9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
+                    android:fontFamily="@font/monda_font"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="CSE IIIrd year" />
 
                 <TextView
                     android:id="@+id/course_name"
+                    android:textScaleX="0.9"
+                    android:maxWidth="200dp"
+                    android:fontFamily="@font/monda_font"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/class_name"
                     tools:text="Basics of IoT" />
 
                 <TextView
+                    android:maxWidth="175dp"
                     android:id="@+id/course_staff_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

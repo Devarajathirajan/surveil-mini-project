@@ -12,15 +12,17 @@
         <entry key="app/src/main/res/drawable/rounded_button.xml" value="0.37447916666666664" />
         <entry key="app/src/main/res/drawable/rounded_rect.xml" value="0.25" />
         <entry key="app/src/main/res/drawable/rounded_rect_white.xml" value="0.21614583333333334" />
+        <entry key="app/src/main/res/font/monda_font.xml" value="0.252027027027027" />
         <entry key="app/src/main/res/layout/activity_login.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="app/src/main/res/layout/fragment_create_class_room.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_class_room.xml" value="0.23243243243243245" />
+        <entry key="app/src/main/res/layout/fragment_create_class_room.xml" value="0.25894736842105265" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_join_class.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/layout/fragment_join_class_room.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/fragment_login.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_roommates.xml" value="0.35833333333333334" />
-        <entry key="app/src/main/res/layout/layout_class.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/layout_class.xml" value="0.33" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.21614583333333334" />
       </map>
     </option>

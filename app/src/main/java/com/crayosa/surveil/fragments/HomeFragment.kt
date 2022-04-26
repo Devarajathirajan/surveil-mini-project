@@ -2,7 +2,6 @@ package com.crayosa.surveil.fragments
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +15,13 @@ import com.crayosa.surveil.R
 import com.crayosa.surveil.adapters.ClassRoomListAdapter
 import com.crayosa.surveil.databinding.FragmentHomeBinding
 import com.crayosa.surveil.datamodels.ClassRoom
+import com.crayosa.surveil.listener.OnItemClickListener
 import com.crayosa.surveil.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class HomeFragment : Fragment() {
     override fun onCreateView(
@@ -32,6 +31,7 @@ class HomeFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         val auth = FirebaseAuth.getInstance()
+        var fab_showing = false
         val binding = DataBindingUtil.inflate<FragmentHomeBinding>(
             inflater,
             R.layout.fragment_home,
@@ -46,7 +46,11 @@ class HomeFragment : Fragment() {
                 auth.signOut()
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
             }
-            val adapter = ClassRoomListAdapter()
+            val adapter = ClassRoomListAdapter(object : OnItemClickListener {
+                override fun onClick(classroom: ClassRoom) {
+                    requireView().findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToClassRoomFragment(classroom))
+                }
+            })
             lifecycleScope.launch {
                 FirebaseRepository(Firebase.firestore)
                     .getEnrolledRooms(auth.currentUser!!.uid).collectLatest {
@@ -57,8 +61,18 @@ class HomeFragment : Fragment() {
 
             binding.classRoomList.adapter = adapter
             binding.createRoom.setOnClickListener {
-                binding.createFab.visibility = View.VISIBLE
-                binding.joinFab.visibility = View.VISIBLE
+                when(fab_showing) {
+                    true ->{
+                        binding.createFab.visibility = View.GONE
+                        binding.joinFab.visibility = View.GONE
+                        fab_showing = false
+                    }
+                    false ->{
+                        binding.createFab.visibility = View.VISIBLE
+                        binding.joinFab.visibility = View.VISIBLE
+                        fab_showing = true
+                    }
+                }
             }
             binding.createFab.setOnClickListener {
                 requireView().findNavController()

@@ -52,9 +52,13 @@
                 android:id="@+id/join_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_margin="16dp"
                 android:layout_marginBottom="646dp"
+                android:src="@drawable/common_full_open_on_phone"
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:backgroundTint="@color/white"
+                app:borderWidth="2dp"
                 app:layout_constraintBottom_toTopOf="@+id/create_fab"
                 app:layout_constraintEnd_toEndOf="parent" />
 
@@ -65,19 +69,23 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/create_room"
+                app:rippleColor="#00FFFFFF"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_baseline_add_24"
+                app:backgroundTint="#000000"
+                app:borderWidth="2dp"
+                tools:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent" />
+
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/create_room"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/purple_200"
                 android:src="@drawable/ic_baseline_add_24"
-                android:id="@+id/create_room"
-                app:backgroundTint="#000000"
-                app:borderWidth="2dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:rippleColor="#00FFFFFF"
                 tools:ignore="SpeakableTextPresentCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
         <com.google.android.material.navigation.NavigationView

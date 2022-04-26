@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_homeFragment_to_joinClassFragment"
             app:destination="@id/joinClassFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_classRoomFragment"
+            app:destination="@id/classRoomFragment" />
     </fragment>
     <fragment
         android:id="@+id/createClassRoom"
@@ -25,4 +28,12 @@
         android:id="@+id/joinClassFragment"
         android:name="com.crayosa.surveil.fragments.JoinClassFragment"
         android:label="JoinClassFragment" />
+    <fragment
+        android:id="@+id/classRoomFragment"
+        android:name="com.crayosa.surveil.fragments.ClassRoomFragment"
+        android:label="ClassRoomFragment" >
+        <argument
+            android:name="classroom"
+            app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+    </fragment>
 </navigation>

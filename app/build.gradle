@@ -3,6 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
+    id "androidx.navigation.safeargs.kotlin"
 }
 
 android {
@@ -47,6 +49,7 @@ dependencies {
     //Navigation component
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
+
 
     //Firebase auth and Google Sign in
     implementation platform('com.google.firebase:firebase-bom:29.1.0')

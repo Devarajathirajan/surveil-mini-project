@@ -1,5 +1,6 @@
 package com.crayosa.surveil.repository
 
+import android.util.Log
 import com.crayosa.surveil.datamodels.ClassRoom
 import com.crayosa.surveil.datamodels.Users
 import com.google.firebase.firestore.FieldValue
@@ -23,10 +24,12 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                         if (list != null) {
                             for(l in list){
                                 ClassRoom(
-                                    l["id"],
-                                    l["name"]!!,
-                                    l["section_name"]!!,
-                                    l["teacher_name"]!!
+                                    l[FIELD_ID],
+                                    l[FIELD_NAME]!!,
+                                    l[FIELD_SECTION_NAME]!!,
+                                    l[FIELD_TEACHERS_NAME]!!,
+                                    l[FIELD_COLOR]!!,
+                                    l[FIELD_GENDER]!!
                                 ).let {classroom ->
                                     result.add(classroom)
                                 }
@@ -52,11 +55,15 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                 ENROLLED_MEMBERS to listOf(hashMapOf(
                     user.id to ROLE_ADMIN,
                     NAME_STRING to user.name
-                ))
+                )),
+                FIELD_COLOR to classroom.color,
+                FIELD_GENDER to classroom.gender
             )
         ).addOnSuccessListener {
             firestore.collection(USERS_COLLECTION).document(user.id!!)
-                .update(ENROLLED_CLASSROOMS, FieldValue.arrayUnion(ClassRoom(it.id, classroom.section_name, classroom.name, classroom.teacher_name)))
+                .update(ENROLLED_CLASSROOMS, FieldValue
+                    .arrayUnion(ClassRoom(it.id, classroom.section_name, classroom.name,
+                        classroom.teacher_name, classroom.color, classroom.gender)))
         }
 
     }
@@ -66,14 +73,19 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
             var classroom: ClassRoom?
             firestore.collection(CLASSROOM_COLLECTION).document(cID)
                 .get().addOnSuccessListener {
-                    val l =it.data as HashMap<String,String>
-                     classroom = ClassRoom(
-                        l["id"],
-                        l["name"]!!,
-                        l["section_name"]!!,
-                        l["teacher_name"]!!
-                    )
-                    trySend(classroom).isSuccess
+                    Log.d(TAG,cID)
+                    if(it.data != null) {
+                        val l = it.data as HashMap<String, String>
+                        classroom = ClassRoom(
+                            l[FIELD_ID],
+                            l[FIELD_NAME]!!,
+                            l[FIELD_SECTION_NAME]!!,
+                            l[FIELD_TEACHERS_NAME]!!,
+                            l[FIELD_COLOR]!!,
+                            l[FIELD_GENDER]!!
+                        )
+                        trySend(classroom).isSuccess
+                    }
                 }
             awaitClose {  }
         }
@@ -83,7 +95,9 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         getClassroom(cID).collectLatest {classroom ->
             if(classroom != null){
                 firestore.collection(USERS_COLLECTION).document(user.id!!)
-                    .update(ENROLLED_CLASSROOMS, FieldValue.arrayUnion(ClassRoom(cID, classroom.section_name, classroom.name, classroom.teacher_name)))
+                    .update(ENROLLED_CLASSROOMS,
+                        FieldValue.arrayUnion(ClassRoom(cID, classroom.section_name, classroom.name,
+                            classroom.teacher_name, classroom.color, classroom.gender)))
                 firestore.collection(CLASSROOM_COLLECTION).document(cID)
                     .update(ENROLLED_MEMBERS, FieldValue.arrayUnion(
                         hashMapOf(
@@ -104,6 +118,15 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         const val SECTION_NAME = "section_name"
         const val TEACHER_NAME = "teacher_name"
         const val ENROLLED_MEMBERS = "members"
+
+        const val FIELD_ID = "id"
+        const val FIELD_NAME = "name"
+        const val FIELD_SECTION_NAME = "section_name"
+        const val FIELD_TEACHERS_NAME = "teacher_name"
+        const val FIELD_COLOR = "color"
+        const val FIELD_GENDER = "gender"
+
+        const val TAG = "FirebaseRepo"
     }
 
 }

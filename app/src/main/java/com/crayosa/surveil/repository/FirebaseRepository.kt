@@ -2,6 +2,7 @@ package com.crayosa.surveil.repository
 
 import android.util.Log
 import com.crayosa.surveil.datamodels.ClassRoom
+import com.crayosa.surveil.datamodels.Members
 import com.crayosa.surveil.datamodels.Users
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -17,7 +18,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         return callbackFlow {
             val result : MutableList<ClassRoom?> = mutableListOf()
             firestore.collection(USERS_COLLECTION).document(uID).get()
-                .addOnSuccessListener { it ->
+                .addOnSuccessListener {
                     val data = it.data?.get(ENROLLED_CLASSROOMS)
                     if (data != null) {
                         val list = data as MutableList<HashMap<String,String>>?
@@ -53,8 +54,8 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                 SECTION_NAME to classroom.section_name,
                 TEACHER_NAME to classroom.teacher_name,
                 ENROLLED_MEMBERS to listOf(hashMapOf(
-                    user.id to ROLE_ADMIN,
-                    NAME_STRING to user.name
+                    ROLE_FIELD to ROLE_ADMIN,
+                    NAME_STRING to classroom.teacher_name
                 )),
                 FIELD_COLOR to classroom.color,
                 FIELD_GENDER to classroom.gender
@@ -91,6 +92,29 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         }
     }
 
+    suspend fun getClassRoomMembers(cID: String) : Flow<List<Members>> {
+        return callbackFlow {
+            val list = mutableListOf<Members>()
+            firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .get().addOnSuccessListener {
+                    if(it.data != null){
+                        val data = it.data as  HashMap<String,*>
+                        val members = data["members"] as List<HashMap<String,*>>
+                        for(m in members ){
+                            list.add(Members(
+                               m["name"]!!.toString(),
+                               m["role"]!! as Long
+                            ))
+                        }
+                        trySend(list)
+                    }else{
+                        Log.d(TAG,"Welll")
+                    }
+                }
+            awaitClose {  }
+        }
+    }
+
     suspend fun joinClassRoom(cID : String, user: Users){
         getClassroom(cID).collectLatest {classroom ->
             if(classroom != null){
@@ -101,7 +125,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                 firestore.collection(CLASSROOM_COLLECTION).document(cID)
                     .update(ENROLLED_MEMBERS, FieldValue.arrayUnion(
                         hashMapOf(
-                            user.id to ROLE_STUDENT,
+                            ROLE_FIELD to ROLE_STUDENT,
                             NAME_STRING to user.name
                     )))
             }
@@ -112,6 +136,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         const val ENROLLED_CLASSROOMS = "enrolled_classrooms"
         const val ROLE_ADMIN = 0
         const val ROLE_STUDENT = 1
+        const val ROLE_FIELD = "role"
         const val USERS_COLLECTION = "users"
         const val CLASSROOM_COLLECTION = "classroom"
         const val NAME_STRING = "name"

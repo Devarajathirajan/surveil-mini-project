@@ -9,36 +9,17 @@
         android:foregroundTint="#5C29B8">
 
         <ImageView
+            android:id="@+id/home_bg"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
             android:background="@drawable/home_page_background" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <androidx.appcompat.widget.Toolbar
-                android:layout_marginTop="4dp"
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/app_name"/>
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_margin="8dp"
-                    android:id="@+id/display_pic"
-                    android:layout_gravity="end"
-                    />
-            </androidx.appcompat.widget.Toolbar>
+
 
             <androidx.recyclerview.widget.RecyclerView
+                tools:visibility="gone"
                 android:id="@+id/class_room_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -46,7 +27,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/join_fab"

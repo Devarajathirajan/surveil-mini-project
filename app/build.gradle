@@ -40,16 +40,20 @@ android {
 }
 
 dependencies {
+
+    implementation "androidx.fragment:fragment-ktx:1.4.1"
+
+    //lottieFiles
     def lottieVersion = "5.0.3"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
     //Glide
     implementation 'com.github.bumptech.glide:glide:4.13.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     //Navigation component
-    implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
-
+    implementation 'androidx.navigation:navigation-ui-ktx:2.4.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.4.2'
 
     //Firebase auth and Google Sign in
     implementation platform('com.google.firebase:firebase-bom:29.1.0')

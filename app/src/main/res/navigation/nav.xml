@@ -8,30 +8,48 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.crayosa.surveil.fragments.HomeFragment"
-        android:label="HomeFragment" >
+        android:label="Surveil">
         <action
             android:id="@+id/action_homeFragment_to_createClassRoom"
-            app:destination="@id/createClassRoom" />
+            app:destination="@id/createClassRoom"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_homeFragment_to_joinClassFragment"
-            app:destination="@id/joinClassFragment" />
+            app:destination="@id/joinClassFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_classRoomFragment"
-            app:destination="@id/classRoomFragment" />
+            app:destination="@id/classRoomFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/createClassRoom"
         android:name="com.crayosa.surveil.fragments.CreateClassRoom"
-        android:label="CreateRoom"
+        android:label="Create room"
         tools:layout="@layout/fragment_create_class_room" />
     <fragment
         android:id="@+id/joinClassFragment"
         android:name="com.crayosa.surveil.fragments.JoinClassFragment"
-        android:label="JoinClassFragment" />
+        android:label="Join room" />
     <fragment
         android:id="@+id/classRoomFragment"
-        android:name="com.crayosa.surveil.fragments.ClassRoomFragment"
-        android:label="ClassRoomFragment" >
+        android:name="com.crayosa.surveil.fragments.ClassRoomFragment">
+        <argument
+            android:name="classroom"
+            app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+        <action
+            android:id="@+id/action_classRoomFragment_to_classRoomInfoFragment"
+            app:destination="@id/classRoomInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/classRoomInfoFragment"
+        android:name="com.crayosa.surveil.fragments.ClassRoomInfoFragment"
+        android:label="ClassRoomInfoFragment" >
         <argument
             android:name="classroom"
             app:argType="com.crayosa.surveil.datamodels.ClassRoom" />

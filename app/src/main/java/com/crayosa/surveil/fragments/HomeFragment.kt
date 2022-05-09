@@ -1,8 +1,8 @@
 package com.crayosa.surveil.fragments
 
 import android.app.Application
-import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,26 +11,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.bumptech.glide.Glide
-import com.crayosa.surveil.LoginActivity
 import com.crayosa.surveil.R
 import com.crayosa.surveil.adapters.ClassRoomListAdapter
 import com.crayosa.surveil.databinding.FragmentHomeBinding
 import com.crayosa.surveil.datamodels.ClassRoom
 import com.crayosa.surveil.fragments.viewmodels.HomeFragViewModel
 import com.crayosa.surveil.listener.OnItemClickListener
-import com.crayosa.surveil.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
 class HomeFragment : Fragment() {
+    private val viewModel : HomeFragViewModel by viewModels{
+        HomeFragmentViewModelFactory(requireActivity().application)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,16 +38,13 @@ class HomeFragment : Fragment() {
             container,
             false
         )
-        val viewModel : HomeFragViewModel by viewModels{
-            HomeFragmentViewModelFactory(requireActivity().application)
-        }
-
         if (auth.currentUser != null) {
-            val adapter = ClassRoomListAdapter(object : OnItemClickListener {
+            val adapter = ClassRoomListAdapter(object : OnItemClickListener(){
                 override fun onClick(classroom: ClassRoom) {
                     requireView().findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToClassRoomFragment(classroom))
                 }
             })
+
             viewModel.classList.observe(viewLifecycleOwner){
                 if (it.isNotEmpty()){
                     adapter.submitList(it)
@@ -93,6 +83,7 @@ class HomeFragment : Fragment() {
         }
         return binding.root
     }
+
 }
 
 class HomeFragmentViewModelFactory(val app : Application) : ViewModelProvider.Factory{

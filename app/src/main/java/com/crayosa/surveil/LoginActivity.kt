@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
@@ -15,8 +16,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.coroutines.coroutineContext
@@ -26,6 +25,9 @@ class LoginActivity : AppCompatActivity() {
     private  lateinit var auth : FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val viewModel : MainViewModel by viewModels{
+            MainViewModelFactory(application)
+        }
         val binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this,R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
@@ -34,12 +36,14 @@ class LoginActivity : AppCompatActivity() {
                 try {
                     // Google Sign In was successful, authenticate with Firebase
                     val account = task.getResult(ApiException::class.java)!!
-                    Log.d(TAG, "firebaseAuthWithGoogle:" + account.id)
                     lifecycleScope.launch {
                         firebaseAuthWithGoogle(account.idToken!!)
+                        setResult(Activity.RESULT_OK)
+                        finish()
                     }
+
                 } catch (e: ApiException) {
-                    // Google Sign In failed, update UI appropriately
+                    setResult(Activity.RESULT_CANCELED)
                     Log.w(TAG, "Google sign in failed", e)
                 }
             }
@@ -49,12 +53,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    //TODO proper launch mode
+
     private suspend fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         withContext(coroutineContext){
             auth.signInWithCredential(credential)
-            finish()
         }
 
 

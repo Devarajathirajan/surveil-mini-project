@@ -2,6 +2,7 @@ package com.crayosa.surveil.repository
 
 import android.util.Log
 import com.crayosa.surveil.datamodels.ClassRoom
+import com.crayosa.surveil.datamodels.Lecture
 import com.crayosa.surveil.datamodels.Members
 import com.crayosa.surveil.datamodels.Users
 import com.google.firebase.firestore.FieldValue
@@ -55,13 +56,14 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                 TEACHER_NAME to classroom.teacher_name,
                 ENROLLED_MEMBERS to listOf(hashMapOf(
                     ROLE_FIELD to ROLE_ADMIN,
-                    NAME_STRING to classroom.teacher_name
+                    NAME_STRING to classroom.teacher_name,
+                    USER_ID to user.id!!
                 )),
                 FIELD_COLOR to classroom.color,
                 FIELD_GENDER to classroom.gender
             )
         ).addOnSuccessListener {
-            firestore.collection(USERS_COLLECTION).document(user.id!!)
+            firestore.collection(USERS_COLLECTION).document(user.id)
                 .update(ENROLLED_CLASSROOMS, FieldValue
                     .arrayUnion(ClassRoom(it.id, classroom.section_name, classroom.name,
                         classroom.teacher_name, classroom.color, classroom.gender)))
@@ -99,16 +101,15 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                 .get().addOnSuccessListener {
                     if(it.data != null){
                         val data = it.data as  HashMap<String,*>
-                        val members = data["members"] as List<HashMap<String,*>>
+                        val members = data[ENROLLED_MEMBERS] as List<HashMap<String,*>>
                         for(m in members ){
                             list.add(Members(
-                               m["name"]!!.toString(),
-                               m["role"]!! as Long
+                               m[NAME_STRING]!!.toString(),
+                               m[ROLE_FIELD]!! as Long,
+                                m[USER_ID]!!.toString()
                             ))
                         }
                         trySend(list)
-                    }else{
-                        Log.d(TAG,"Welll")
                     }
                 }
             awaitClose {  }
@@ -126,11 +127,63 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                     .update(ENROLLED_MEMBERS, FieldValue.arrayUnion(
                         hashMapOf(
                             ROLE_FIELD to ROLE_STUDENT,
-                            NAME_STRING to user.name
+                            NAME_STRING to user.name,
+                            USER_ID to user.id
                     )))
             }
         }
     }
+
+    fun addLectures(lecture: Lecture, cID : String){
+        firestore.collection(CLASSROOM_COLLECTION).document(cID)
+            .update(LECTURES_FIELD, FieldValue.arrayUnion(lecture))
+    }
+
+    fun isAdmin(cID: String, uID: String) : Flow<Boolean> {
+        return callbackFlow {
+            var result = false
+            firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .get().addOnSuccessListener {
+                    if (it.data != null) {
+                        val data = it.data as HashMap<String, *>
+                        val members = data[ENROLLED_MEMBERS] as List<HashMap<String, *>>
+                        for (m in members) {
+                            if (m[USER_ID]!!.toString() == uID) {
+                                result = true
+                            }
+                        }
+                        trySend(result)
+                    }
+                }
+            awaitClose{}
+        }
+    }
+
+    suspend fun getLectures(cID : String) : Flow<MutableList<Lecture>>{
+        return callbackFlow {
+            val list = mutableListOf<Lecture>()
+            Log.d(TAG,"HEllo")
+            firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .get().addOnSuccessListener {
+                    if(it.data != null){
+                        Log.d(TAG,"Fuuuu")
+                        val data = it.data as  HashMap<String,*>
+                        val members = data[LECTURES_FIELD] as List<HashMap<String,*>>
+                        for(m in members ){
+                            list.add(
+                                Lecture(
+                                m[LECTURE_URL]!!.toString(),
+                                m[NAME_STRING].toString()
+                            )
+                            )
+                        }
+                        trySend(list)
+                    }
+                }
+            awaitClose {  }
+        }
+    }
+
 
     companion object{
         const val ENROLLED_CLASSROOMS = "enrolled_classrooms"
@@ -150,6 +203,9 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         const val FIELD_TEACHERS_NAME = "teacher_name"
         const val FIELD_COLOR = "color"
         const val FIELD_GENDER = "gender"
+        const val USER_ID =  "uid"
+        const val LECTURES_FIELD = "Lectures"
+        const val LECTURE_URL = "url"
 
         const val TAG = "FirebaseRepo"
     }

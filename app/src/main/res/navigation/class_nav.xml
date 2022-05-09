@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/class_nav"
     app:startDestination="@id/lecturesFragment">
 
@@ -17,6 +18,9 @@
         <argument
             android:name="classroom"
             app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+        <action
+            android:id="@+id/action_lecturesFragment_to_addLectureFragment"
+            app:destination="@id/addLectureFragment" />
     </fragment>
     <fragment
         android:id="@+id/membersFragment"
@@ -28,6 +32,14 @@
             app:launchSingleTop="true"
             app:popUpTo="@id/lecturesFragment"
             app:popUpToInclusive="true" />
+        <argument
+            android:name="classroom"
+            app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+    </fragment>
+    <fragment
+        android:id="@+id/addLectureFragment"
+        android:name="com.crayosa.surveil.fragments.AddLectureFragment"
+        android:label="AddLectureFragment" >
         <argument
             android:name="classroom"
             app:argType="com.crayosa.surveil.datamodels.ClassRoom" />

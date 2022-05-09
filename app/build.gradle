@@ -42,6 +42,7 @@ android {
 dependencies {
 
     implementation "androidx.fragment:fragment-ktx:1.4.1"
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.0.1'
 
     //lottieFiles
     def lottieVersion = "5.0.3"

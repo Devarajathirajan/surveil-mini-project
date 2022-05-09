@@ -31,11 +31,19 @@
         android:id="@+id/createClassRoom"
         android:name="com.crayosa.surveil.fragments.CreateClassRoom"
         android:label="Create room"
-        tools:layout="@layout/fragment_create_class_room" />
+        tools:layout="@layout/fragment_create_class_room" >
+        <action
+            android:id="@+id/action_createClassRoom_to_classRoomFragment"
+            app:destination="@id/classRoomFragment" />
+    </fragment>
     <fragment
         android:id="@+id/joinClassFragment"
         android:name="com.crayosa.surveil.fragments.JoinClassFragment"
-        android:label="Join room" />
+        android:label="Join room" >
+        <action
+            android:id="@+id/action_joinClassFragment_to_classRoomFragment"
+            app:destination="@id/classRoomFragment" />
+    </fragment>
     <fragment
         android:id="@+id/classRoomFragment"
         android:name="com.crayosa.surveil.fragments.ClassRoomFragment">
@@ -45,13 +53,23 @@
         <action
             android:id="@+id/action_classRoomFragment_to_classRoomInfoFragment"
             app:destination="@id/classRoomInfoFragment" />
+        <action
+            android:id="@+id/action_classRoomFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
     </fragment>
     <fragment
         android:id="@+id/classRoomInfoFragment"
-        android:name="com.crayosa.surveil.fragments.ClassRoomInfoFragment"
-        android:label="ClassRoomInfoFragment" >
+        android:name="com.crayosa.surveil.fragments.ClassRoomInfoFragment">
         <argument
             android:name="classroom"
             app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+    </fragment>
+    <fragment
+        android:id="@+id/playerFragment"
+        android:name="com.crayosa.surveil.fragments.PlayerFragment"
+        android:label="PlayerFragment" >
+        <argument
+            android:name="lecture"
+            app:argType="com.crayosa.surveil.datamodels.Lecture" />
     </fragment>
 </navigation>

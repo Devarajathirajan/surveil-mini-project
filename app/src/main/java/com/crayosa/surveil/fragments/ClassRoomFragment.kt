@@ -34,9 +34,7 @@ class ClassRoomFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var selected = 0
-        requireView().findViewById<View>(R.id.class_frag).findNavController().setGraph(R.navigation.class_nav, Bundle().apply {
-            putParcelable("classroom", args.classroom)
-        })
+
         binding.bottomNavigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.lecture ->{
@@ -66,6 +64,9 @@ class ClassRoomFragment : Fragment() {
                 else -> false
             }
         }
+        requireView().findViewById<View>(R.id.class_frag).findNavController().setGraph(R.navigation.class_nav, Bundle().apply {
+            putParcelable("classroom", args.classroom)
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

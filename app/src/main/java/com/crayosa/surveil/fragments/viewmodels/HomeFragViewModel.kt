@@ -18,7 +18,12 @@ class HomeFragViewModel(app : Application) : AndroidViewModel(app) {
     private val auth = FirebaseAuth.getInstance()
     val classList : LiveData<MutableList<ClassRoom?>>
         get() = _classList
-    init{
+
+    init {
+        reload()
+    }
+
+    private fun reload(){
         viewModelScope.launch {
             FirebaseRepository(Firebase.firestore)
                 .getEnrolledRooms(auth.currentUser!!.uid).collectLatest {

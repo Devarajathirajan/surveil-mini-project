@@ -47,7 +47,7 @@ class AddLectureFragment : Fragment() {
         binding.submitLecture.setOnClickListener {
             FirebaseRepository(Firebase.firestore)
                 .addLectures(
-                    Lecture(binding.lectureLinkEditText.text.toString(),binding.lectureTopicEditText.text.toString()),
+                    Lecture(null,binding.lectureLinkEditText.text.toString(),binding.lectureTopicEditText.text.toString()),
                     args.classroom.id!!
                 )
         }

@@ -1,10 +1,7 @@
 package com.crayosa.surveil.repository
 
 import android.util.Log
-import com.crayosa.surveil.datamodels.ClassRoom
-import com.crayosa.surveil.datamodels.Lecture
-import com.crayosa.surveil.datamodels.Members
-import com.crayosa.surveil.datamodels.Users
+import com.crayosa.surveil.datamodels.*
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -136,7 +133,10 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
 
     fun addLectures(lecture: Lecture, cID : String){
         firestore.collection(CLASSROOM_COLLECTION).document(cID)
-            .update(LECTURES_FIELD, FieldValue.arrayUnion(lecture))
+            .collection(LECTURES_FIELD)
+            .add(
+                lecture
+            )
     }
 
     fun isAdmin(cID: String, uID: String) : Flow<Boolean> {
@@ -162,27 +162,84 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
     suspend fun getLectures(cID : String) : Flow<MutableList<Lecture>>{
         return callbackFlow {
             val list = mutableListOf<Lecture>()
-            Log.d(TAG,"HEllo")
             firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .collection(LECTURES_FIELD)
                 .get().addOnSuccessListener {
-                    if(it.data != null){
-                        Log.d(TAG,"Fuuuu")
-                        val data = it.data as  HashMap<String,*>
-                        val members = data[LECTURES_FIELD] as List<HashMap<String,*>>
-                        for(m in members ){
+                    val documents = it.documents
+                    for(data in documents){
+                        if (data != null){
                             list.add(
-                                Lecture(
-                                m[LECTURE_URL]!!.toString(),
-                                m[NAME_STRING].toString()
-                            )
+                                Lecture(data.id,data[LECTURE_URL].toString(), data[NAME_STRING].toString())
                             )
                         }
-                        trySend(list)
                     }
+                    trySend(list)
                 }
             awaitClose {  }
         }
     }
+
+    fun addProgress(cID: String,lID: String, progress : Progress){
+        firestore.collection(CLASSROOM_COLLECTION).document(cID)
+            .collection(LECTURES_FIELD).document(lID)
+            .collection(PROGRESS_FIELD)
+            .document(progress.id)
+            .set(progress)
+    }
+
+    fun getProgress(cID: String, lID : String, uID: String, uname : String) : Flow<Progress>{
+        return callbackFlow {
+            var flag = true
+            firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .collection(LECTURES_FIELD).document(lID)
+                .collection(PROGRESS_FIELD).get().addOnSuccessListener {
+                    val documents = it.documents
+                    for(data in documents){
+                        if (data != null){
+                            if(data.id == uID) {
+                                trySend(
+                                    Progress(
+                                        data.id,
+                                        data[NAME_STRING].toString(),
+                                        (data[COMPLETION_FIELD] as Double).toFloat()
+                                    )
+                                )
+                                flag = false
+                            }
+                        }
+                    }
+                    if(flag){
+                        trySend(Progress(
+                            uID, uname, 0.0f
+                        ))
+                    }
+                }
+            awaitClose{}
+        }
+    }
+
+
+    fun getProgressList(cID: String, lID : String) : Flow<List<Progress>>{
+        return callbackFlow {
+            val list = mutableListOf<Progress>()
+            firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                .collection(LECTURES_FIELD).document(lID)
+                .collection(PROGRESS_FIELD).get().addOnSuccessListener {
+                    val documents = it.documents
+                    for(data in documents){
+                        if (data != null){
+                            list.add(
+                                Progress(data.id,data[NAME_STRING].toString(), (data[COMPLETION_FIELD] as Double).toFloat())
+                            )
+                        }
+                    }
+                    Log.d(TAG, list.toString())
+                    trySend(list)
+                }
+            awaitClose{}
+        }
+    }
+
 
 
     companion object{
@@ -193,6 +250,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         const val USERS_COLLECTION = "users"
         const val CLASSROOM_COLLECTION = "classroom"
         const val NAME_STRING = "name"
+        const val COMPLETION_FIELD = "completion"
         const val SECTION_NAME = "section_name"
         const val TEACHER_NAME = "teacher_name"
         const val ENROLLED_MEMBERS = "members"
@@ -206,6 +264,8 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
         const val USER_ID =  "uid"
         const val LECTURES_FIELD = "Lectures"
         const val LECTURE_URL = "url"
+
+        const val PROGRESS_FIELD = "progress"
 
         const val TAG = "FirebaseRepo"
     }

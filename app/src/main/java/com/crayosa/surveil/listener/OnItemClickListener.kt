@@ -5,5 +5,5 @@ import com.crayosa.surveil.datamodels.Lecture
 
 abstract class OnItemClickListener {
     open fun onClick(classroom : ClassRoom){}
-    open fun onClick(lecture: Lecture){}
+    open fun onClick(lecture: Lecture, position : Int){}
 }

@@ -71,5 +71,13 @@
         <argument
             android:name="lecture"
             app:argType="com.crayosa.surveil.datamodels.Lecture" />
+        <argument
+            android:name="classroom"
+            app:argType="com.crayosa.surveil.datamodels.ClassRoom" />
+        <argument
+            android:name="progress"
+            app:argType="com.crayosa.surveil.datamodels.Progress"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

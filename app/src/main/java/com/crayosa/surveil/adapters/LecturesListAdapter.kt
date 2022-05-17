@@ -22,7 +22,7 @@ class LecturesListAdapter(val listener : OnItemClickListener) : ListAdapter<Lect
     override fun onBindViewHolder(holder: LectureViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.itemView.setOnClickListener {
-            listener.onClick(getItem(position))
+            listener.onClick(getItem(position), position)
         }
     }
 

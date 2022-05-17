@@ -1,25 +1,45 @@
 package com.crayosa.surveil.fragments
 
+import android.app.AlertDialog
 import android.app.Application
+import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.crayosa.surveil.R
 import com.crayosa.surveil.adapters.LecturesListAdapter
+import com.crayosa.surveil.adapters.ProgressListAdapter
 import com.crayosa.surveil.databinding.FragmentLecturesBinding
+import com.crayosa.surveil.databinding.LayoutDialogProgressBinding
+import com.crayosa.surveil.databinding.LayoutProgressItemBinding
 import com.crayosa.surveil.datamodels.ClassRoom
 import com.crayosa.surveil.datamodels.Lecture
+import com.crayosa.surveil.datamodels.Progress
 import com.crayosa.surveil.fragments.viewmodels.LecturesViewModel
 import com.crayosa.surveil.listener.OnItemClickListener
+import com.crayosa.surveil.repository.FirebaseRepository
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
 class LecturesFragment : Fragment() {
@@ -32,10 +52,10 @@ class LecturesFragment : Fragment() {
         // Inflate the layout for this fragment
         val binding = DataBindingUtil.inflate<FragmentLecturesBinding>(inflater,R.layout.fragment_lectures, container, false)
         val adapter = LecturesListAdapter(object : OnItemClickListener(){
-             override fun onClick(lecture: Lecture) {
-                requireActivity().findViewById<View>(
-                    R.id.main_frag
-                ).findNavController().navigate(ClassRoomFragmentDirections.actionClassRoomFragmentToPlayerFragment(lecture))
+             override fun onClick(lecture: Lecture,position : Int) {
+                 //Create AlertDialog
+                ProgressDialogFragment(args.classroom, lecture)
+                    .show(childFragmentManager, "DialogFragment")
             }
         })
 
@@ -67,4 +87,41 @@ class LecturesVMFactory(val app : Application, val id: String, private val uid :
         throw IllegalArgumentException("Unknown ViewModel")
     }
 
+}
+
+class ProgressDialogFragment(val classRoom  : ClassRoom, val lecture : Lecture) : DialogFragment() {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        var progress : Progress? = null
+        val dialog = AlertDialog.Builder(context)
+            .setTitle("Completion")
+            .setView(R.layout.layout_progress_item)
+            .setPositiveButton("Play"){ _, _ ->
+                requireActivity().findViewById<View>(
+                    R.id.main_frag
+                ).findNavController().navigate(
+                    ClassRoomFragmentDirections.actionClassRoomFragmentToPlayerFragment(
+                        lecture, classRoom, progress
+                    )
+                )
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }.create()
+
+        lifecycleScope.launch {
+            val user = FirebaseAuth.getInstance()
+                .currentUser!!
+            FirebaseRepository(Firebase.firestore)
+                .getProgress(classRoom.id!!, lecture.id!!, FirebaseAuth.getInstance()
+                    .currentUser!!.uid, user.displayName!!)
+                .collectLatest {
+                    progress = it
+                    dialog.findViewById<TextView>(R.id.progress_display_name).text = it.name
+                    dialog.findViewById<LinearProgressIndicator>(R.id.progress_bar).progress = it.completion.toInt()
+                }
+        }
+
+
+        return dialog
+    }
 }

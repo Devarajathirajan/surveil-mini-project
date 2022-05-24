@@ -6,12 +6,10 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.TextureView
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
@@ -36,6 +34,7 @@ import com.crayosa.surveil.repository.FirebaseRepository
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.installations.FirebaseInstallationsRegistrar
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine

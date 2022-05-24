@@ -149,7 +149,7 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
                         val members = data[ENROLLED_MEMBERS] as List<HashMap<String, *>>
                         for (m in members) {
                             if (m[USER_ID]!!.toString() == uID) {
-                                result = true
+                                result = m[ROLE_FIELD] as Long == ROLE_ADMIN
                             }
                         }
                         trySend(result)
@@ -244,8 +244,8 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
 
     companion object{
         const val ENROLLED_CLASSROOMS = "enrolled_classrooms"
-        const val ROLE_ADMIN = 0
-        const val ROLE_STUDENT = 1
+        const val ROLE_ADMIN = 0L
+        const val ROLE_STUDENT = 1L
         const val ROLE_FIELD = "role"
         const val USERS_COLLECTION = "users"
         const val CLASSROOM_COLLECTION = "classroom"

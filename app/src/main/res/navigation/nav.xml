@@ -56,6 +56,9 @@
         <action
             android:id="@+id/action_classRoomFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_classRoomFragment_to_reportFragment"
+            app:destination="@id/reportFragment" />
     </fragment>
     <fragment
         android:id="@+id/classRoomInfoFragment"
@@ -79,5 +82,17 @@
             app:argType="com.crayosa.surveil.datamodels.Progress"
             app:nullable="true"
             android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportFragment"
+        android:name="com.crayosa.surveil.fragments.ReportFragment"
+        android:label="fragment_report"
+        tools:layout="@layout/fragment_report" >
+        <argument
+            android:name="cID"
+            app:argType="string" />
+        <argument
+            android:name="lID"
+            app:argType="string" />
     </fragment>
 </navigation>

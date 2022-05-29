@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.ReportFragment">
-        <androidx.recyclerview.widget.RecyclerView
+        <com.mindorks.placeholderview.ExpandablePlaceHolderView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/progress_list"

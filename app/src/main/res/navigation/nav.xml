@@ -86,8 +86,7 @@
     <fragment
         android:id="@+id/reportFragment"
         android:name="com.crayosa.surveil.fragments.ReportFragment"
-        android:label="fragment_report"
-        tools:layout="@layout/fragment_report" >
+        tools:layout="@layout/fragment_report">
         <argument
             android:name="cID"
             app:argType="string" />

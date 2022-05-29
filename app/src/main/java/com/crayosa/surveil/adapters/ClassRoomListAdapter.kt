@@ -26,6 +26,7 @@ class ClassRoomListAdapter(val listener : OnItemClickListener) : ListAdapter<Cla
             listener.onClick(getItem(position))
         }
     }
+
 }
 
 private class RoomDiffUtil : DiffUtil.ItemCallback<ClassRoom>(){

@@ -221,21 +221,59 @@ class FirebaseRepository(private val firestore: FirebaseFirestore){
 
     fun getProgressList(cID: String, lID : String) : Flow<List<Progress>>{
         return callbackFlow {
-            val list = mutableListOf<Progress>()
+            val memberList = mutableListOf<Members>()
             firestore.collection(CLASSROOM_COLLECTION).document(cID)
-                .collection(LECTURES_FIELD).document(lID)
-                .collection(PROGRESS_FIELD).get().addOnSuccessListener {
-                    val documents = it.documents
-                    for(data in documents){
-                        if (data != null){
-                            list.add(
-                                Progress(data.id,data[NAME_STRING].toString(), (data[COMPLETION_FIELD] as Double).toFloat())
-                            )
+                .get().addOnSuccessListener {
+                    if(it.data != null){
+                        val data = it.data as  HashMap<String,*>
+                        val members = data[ENROLLED_MEMBERS] as List<HashMap<String,*>>
+                        for(m in members ){
+                            if(m[ROLE_FIELD]!! == ROLE_ADMIN) continue
+                            memberList.add(Members(
+                                m[NAME_STRING]!!.toString(),
+                                m[ROLE_FIELD]!! as Long,
+                                m[USER_ID]!!.toString()
+                            ))
                         }
                     }
-                    Log.d(TAG, list.toString())
-                    trySend(list)
+
+                    val list = mutableListOf<Progress>()
+                    firestore.collection(CLASSROOM_COLLECTION).document(cID)
+                        .collection(LECTURES_FIELD).document(lID)
+                        .collection(PROGRESS_FIELD).get().addOnSuccessListener {
+                            val documents = it.documents
+                            for(data in documents){
+                                if (data != null){
+                                    list.add(
+                                        Progress(data.id,data[NAME_STRING].toString(), (data[COMPLETION_FIELD] as Double).toFloat())
+                                    )
+                                }
+                            }
+
+                            Log.d(TAG,memberList.toString())
+                            Log.d(TAG, list.toString())
+                            val duplicateList = memberList.toList()
+                            for(m in  duplicateList){
+                                for(l in list){
+                                    if(l.id == m.id)
+                                        memberList.remove(m)
+                                }
+                            }
+                            for (m in memberList){
+                                list.add(
+                                    Progress(
+                                        m.id,m.name, 0.0f
+                                    )
+                                )
+                            }
+                            trySend(list)
+                        }
+
                 }
+
+
+
+
             awaitClose{}
         }
     }
